@@ -1,3 +1,7 @@
 # ProPra1-Programmieraufgaben
 
-Benennt eure Abgaben immer mit euren Namen und der Woche aus der die Aufgabe kommt. 
+Pusht den Code wenn ihr git push macht in den jeweiligen Wochenbranch. Also bspw. git push -u origin woche_1. 
+
+
+Git-Tutorial zum pushen von Dateien:
+https://www.datacamp.com/tutorial/git-push-pull
