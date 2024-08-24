@@ -1,0 +1,140 @@
+= Programmierpraktium I: Übung 5
+:icons: font
+:icon-set: fa
+:source-highlighter: rouge
+:experimental:
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+== Testgetriebene Entwicklung: Rover-Kata
+
+In den letzten Wochen ging es intensiv ums Testing von Anwendungen.
+Unter anderem wurde die *testgetriebene Entwicklung* vorgestellt und damit
+wollen wir uns heute befassen.
+
+=== Aufgabenstellung
+
+Das Kata (≈ Übung), mit dem wir TDD üben wollen, ist das Rover-Kata. Hierbei muss die
+Steuerung eines Mars-Rovers implementiert werden. Für die grafische Ausgabe haben
+wir Clojure (eine andere Programmiersprache, die auf der JVM läuft) verwendet,
+die Logik wird (von Ihnen) in Java implementiert. (Vorletztes Jahr haben sich ein paar Leute ein Beispiel für ein Gradle-Projekt mit gemischten Sprachen gewünscht. Sie können diese Tatsache heute aber im Wesentlichen ignorieren.)
+
+Die Klasse, die Sie
+für die Logik bearbeiten müssen, ist `RoverControl`. Die Methode `control` in dieser Klasse verarbeitet immer das gesamte Spielfeld (`IGame`)
+inklusive Position und Ausrichtung des Rovers. Außerdem erhält die
+Funktion einen String `input`, welcher aus den folgenden Buchstaben besteht:
+
+* `l`: dreht den Rover 90 Grad nach links
+* `r`: analog für rechts
+* `f`: fährt den Rover ein Feld nach vorne
+* `b`: analog für rückwärts
+* `q`: beendet das Spiel (bereits außerhalb von `RoverControl` implementiert)
+
+Ein Eingabestring kann also z. B. `lfrf` sein: Der Rover dreht
+zunächst um 90° nach links, fährt dann einen Schritt vorwärts, dreht nach rechts und fährt einen
+Schritt vorwärts.
+
+Natürlich gibt es Hindernisse auf dem Mars. Der Rover kann nicht über Felsen
+fahren. Diese werden als `#` repräsentiert. Eine beispielhafte Welt sieht dann so aus:
+
+[source]
+----
+gradle run
+
+   # #  #  ###         ###         #          #        #   #      # # #      #
+    ### # #    ## #      #    # #### #  #    # ## #  #  # ##     #   ##### #
+    #     ##  ##                   #     #               #  #   ## ##   #    ##
+ #  # #   ### # ##   # #      ##    ###    #           #  # # ##    #  #    # ##
+    # ####         #  #    # #  ##  # #      #### ## # ## #      # ## ## #     #
+ #     #      #   ##     # #    #   #       # ##    #  # #     #   # # #   #  ##
+     ## #  #  ##     ### #        ## ## ##            ###            #       #
+      #   #  #            ##          #    #               # # #  #   #      #
+ #  #    # ##   ###     #  #          #         #  #          #         #    #
+##    #  # # #    ###       #    ##        # ##    #        #  ##    #
+#   # ##  #  #       #  # #       #            #      #     # ##  #      #
+ #             # ##      # #             # #   #     #         #     ##  #     #
+     ## #   # ##      #  #      #   # # Λ          ## ##  #   ##      #   ##  #
+  #   ##    #        #    #    #          # #  # #   #  #  #   # #   #       #
+##      #         ###      #    #  ##   ##  #  #    ##  #  #      #       # ###
+#  #   # # #     #      #   #  ##### #   ##  #  # ##  ##      ##  ##         #
+  #  #               #       #     ##    #         #   #  ###    #          #
+#                  ## #  #       #                 ### #  #    ## #    # #  #  #
+  #### ## #   #    #     #   #     #    #         #  #     #     ##  #
+  #    # ### ##        #     # #  #       ##       #    #   #  #          ##  #
+ ### #      #      ##  ## #    #  ## ###  #  #  #   #   #    #     #    ###
+  ###       ### # ##     # #  # #  #   #   ##     #  #  ###  ## #  ##    #  #
+ #    ## #          ### ##     ##  #           #    #  #      ## #  ###      ##
+ #    #  ##  ## #  #    ##       #             #     # # #   #      ####     ##
+Where do you want to move? Available commands: l, r, f, b, q
+----
+
+In der Mitte steht der Rover. Er wird als Pfeil `Λ` dargestellt. In diesem Fall
+schaut er also nach Norden. Die Befehle funktionieren noch nicht, weil `RoverControl` noch (von Ihnen) umgesetzt werden muss.
+
+NOTE: Je nach verwendetem Terminal kann es auch sein, dass das Sonderzeichen `Λ` als `?` dargestellt wird. Das ist für uns jetzt aber nicht weiter schlimm, da wir hauptsächlich auf die Tests gucken.
+
+Die Methode `control` soll nun die Welt bekommen, den Input interpretieren und
+eine neue Welt zurückgeben, in denen die Befehle aus dem `input`-Parameter
+angewandt wurden.
+
+=== Vorgehensweise
+
+* Klonen Sie das Repository.
+* Importieren Sie das Gradle-Projekt in Ihre IDE.
+* Öffnen Sie die Java-Klassen `de.propra.rover.RoverControl` und `de.propra.rover.RoverControlTest`.
+* Implementieren Sie `control` *testgetrieben*. Das heißt: Fangen Sie an den ersten fehlschlagenden Test zu schreiben (wir haben schon einen fehlschlagenden Test vorgegeben). Nachdem der fehlschlagende Test geschrieben worden ist, muss nun irgendeine Lösung gefunden werden, welche den Test grün werden lässt. Anschließend müssen Sie überlegen, ob die Lösung überarbeitet werden kann (Refactoring). Alle Tests sollten danach grün sein. Fangen Sie nun wieder an, einen weiteren fehlschlagenden Test zu schreiben.
+
+NOTE: Zur Erinnerung: Bei der test-_getriebenen_ Entwicklung wird jede neue Funktionalität im Code durch einen fehlschlagenden Test motiviert. Damit ist sichergestellt, dass alle Funktionalitäten von mindestens einem Test geprüft werden. **Fügen Sie im Rafactoring-Schritt also keine neue Funktionalität hinzu!**
+
+=== Hinweise
+
+* Fangen Sie *kleinschrittig* an, d. h. entwickeln Sie einen ersten Test mit einem kleinen Spielfeld und einer leeren Eingabe, danach vielleicht mit einem kurzen Input (`input = "l"`, dreht den Rover nur um die eigene Achse) oder anderer Startausrichtung usw.
+* Versuchen Sie noch nicht innerhalb der ersten Tests komplexere/raffiniertere Implementierungen zu schreiben. Implementieren Sie Sonderfälle erst dann, wenn Sie einen Test dafür haben.
+* Die aktuelle Ausrichtung des Rovers wird als Enum-Wert gespeichert. Der Rover kann in vier verschiedene Richtungen ausgerichtet sein.
+* Wir werden das Programm definitiv _nicht_ innerhalb der Übungszeit fertig schreiben können (Kristin hat über 4 Stunden für ihre Lösung gebraucht). Uns geht es heute um den TDD-Prozess, nicht um eine fertige Lösung.
+
+=== „Fertiges“ Programm ausprobieren
+
+Wenn Sie das Programm nicht nur Testen, sondern auch mal „spielen“ wollen: Das Programm kann mit `gradle run` auf der Konsole gestartet werden (da die `main`-Methode im Clojure-Code liegt, funktioniert potentiell der Play-Button Ihrer IDE nicht). Danach startet die Gameloop und fragt nach den Steuer-Befehlen, die über die Standardeingabe eingegeben werden.
+
+== Credits
+
+Dieser Code basiert auf folgendem Artikel: http://technologyconversations.com/2014/10/17/java-tutorial-through-katas-mars-rover/[Java Tutorial Through Katas: Mars Rover].
+
+Die graphische Aufgabe basiert auf https://github.com/stianeikeland/rover-clj[diesem Repository].
+
+== Tipp der Woche: tldr
+
+Wie hat `git reset` nochmal funktioniert? Und was was macht nochmal das `-a` in `ls -a`? Wenn Sie wissen wollen, was ein Befehl kann, haben Sie verschiedene Möglichkeiten:
+
+* Bei den meisten Befehlen können Sie `--help` oder kurz `-h` (bei Windows-Befehlen meist `/?`) verwenden, um eine Kurzhilfe zu erhalten: `ls --help`
+* Ein ausführliches Handbuch (manual) kann mit dem Befehl `man` aufgerufen werden: `man ls`, `man git reset`. In Handbuchseiten suchen Sie mit `/Suchbegriff`, `Enter`; das nächste Suchergebnis gibt es mit `n`. Eine Handbuchseite wird mit `q` geschlossen.
+* Oft sind die Handbuchseiten sehr ausführlich und eigentlich wäre man mit kurzen Verwendungsbeispielen glücklich. Genau dafür gibt es das Tool https://tldr.sh/[tldr]:
+[source]
+----
+% tldr git-reset
+git reset
+Undo commits or unstage changes, by resetting the current Git HEAD to the specified state.If a path is passed, it works as "unstage"; if a commit hash or branch is passed, it works as "uncommit".More information: https://git-scm.com/docs/git-reset.
+
+ - Unstage everything:
+   git reset
+
+ - Unstage specific file(s):
+   git reset {{path/to/file(s)}}
+
+ - Interactively unstage portions of a file:
+   git reset --patch {{path/to/file}}
+
+ - Undo the last commit, keeping its changes (and any further uncommitted changes) in the filesystem:
+   git reset HEAD~
+
+ - Undo the last two commits, adding their changes to the index, i.e. staged for commit:
+   git reset --soft HEAD~2
+
+ - Discard any uncommitted changes, staged or not (for only unstaged changes, use git checkout):
+   git reset --hard
